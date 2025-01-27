@@ -8,12 +8,15 @@ public class Product {
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
+    [BsonElement("_id")]
     public string? Id { get; set; }
 
-    public string username { get; set; } = null!;
+    public string Name { get; set; } = null!;
+    public int Stock { get; set; }
+    public int Price { get; set; }
 
-    [BsonElement("items")]
-    [JsonPropertyName("items")]
-    public List<string> movieIds { get; set; } = null!;
+    [BsonRepresentation(BsonType.ObjectId)]
+    [BsonElement("ID_Category")]
+    public string? CategoryId { get; set; }
 
 }
