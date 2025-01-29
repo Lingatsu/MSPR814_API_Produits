@@ -27,8 +27,8 @@ public class ProductController: Controller {
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> AddProduct(string id, [FromBody] string movieId) {
-        await _mongoDBService.AddProductAsync(id, movieId);
+    public async Task<IActionResult> UpdateProduct(string id, [FromBody] Product updatedProduct) {
+        await _mongoDBService.UpdateProductAsync(id, updatedProduct);
         return NoContent();         
     }
 

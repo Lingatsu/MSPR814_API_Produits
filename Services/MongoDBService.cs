@@ -22,14 +22,18 @@ public class MongoDBService {
         await _productCollection.InsertOneAsync(product);
         return;
      }
-    public async Task AddProductAsync(string id, string movieId) {
-        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq("Id", id);
-        UpdateDefinition<Product> update = Builders<Product>.Update.AddToSet<string>("movieIds", movieId);
-        await _productCollection.UpdateOneAsync(filter, update);
-        return;
-    }
+public async Task UpdateProductAsync(string id, Product updatedProduct) {
+    var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
+    var update = Builders<Product>.Update
+        .Set(p => p.Name, updatedProduct.Name)
+        .Set(p => p.Stock, updatedProduct.Stock)
+        .Set(p => p.Price, updatedProduct.Price)
+        .Set(p => p.CategoryId, updatedProduct.CategoryId);
+
+    await _productCollection.UpdateOneAsync(filter, update);
+}
     public async Task DeleteAsync(string id) {
-        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq("Id", id);
+        FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Id, id);
         await _productCollection.DeleteOneAsync(filter);
         return;  
      }
