@@ -20,6 +20,8 @@ public class ProductController: Controller {
         return await _mongoDBService.GetAsync();
     }
 
+    // Faire un Get by ID
+
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] Product product) {
         await _mongoDBService.CreateAsync(product);
@@ -27,13 +29,13 @@ public class ProductController: Controller {
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(string id, [FromBody] Product updatedProduct) {
+    public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] Product updatedProduct) {
         await _mongoDBService.UpdateProductAsync(id, updatedProduct);
         return NoContent();         
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id) {
+    public async Task<IActionResult> Delete(Guid id) {
         await _mongoDBService.DeleteAsync(id);
         return NoContent();
     }

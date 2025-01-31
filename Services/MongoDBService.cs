@@ -10,6 +10,7 @@ public class MongoDBService {
     private readonly IMongoCollection<Product> _productCollection;
 
     public MongoDBService(IOptions<MongoDBSettings> mongoDBSettings) {
+
         MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
         IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
         _productCollection = database.GetCollection<Product>(mongoDBSettings.Value.CollectionName);
@@ -22,7 +23,7 @@ public class MongoDBService {
         await _productCollection.InsertOneAsync(product);
         return;
      }
-public async Task UpdateProductAsync(string id, Product updatedProduct) {
+public async Task UpdateProductAsync(Guid id, Product updatedProduct) {
     var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
     var update = Builders<Product>.Update
         .Set(p => p.Name, updatedProduct.Name)
@@ -32,7 +33,7 @@ public async Task UpdateProductAsync(string id, Product updatedProduct) {
 
     await _productCollection.UpdateOneAsync(filter, update);
 }
-    public async Task DeleteAsync(string id) {
+    public async Task DeleteAsync(Guid id) {
         FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Id, id);
         await _productCollection.DeleteOneAsync(filter);
         return;  

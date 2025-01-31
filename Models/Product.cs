@@ -7,16 +7,20 @@ namespace MongoExample.Models;
 public class Product {
 
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
+    [BsonRepresentation(BsonType.String)]
     [BsonElement("_id")]
-    public string? Id { get; set; }
+    [JsonIgnore]
+    public Guid Id { get; set; } = Guid.NewGuid(); //Génération UUID
 
     public string Name { get; set; } = null!;
     public int Stock { get; set; }
     public int Price { get; set; }
-
-    [BsonRepresentation(BsonType.ObjectId)]
+    
+    [BsonRepresentation(BsonType.String)]
     [BsonElement("ID_Category")]
-    public string? CategoryId { get; set; }
+    [JsonIgnore]
+    public Guid CategoryId { get; set; } = Guid.NewGuid(); //Génération UUID
+    public string Category { get; set; } = null!;
+
 
 }
