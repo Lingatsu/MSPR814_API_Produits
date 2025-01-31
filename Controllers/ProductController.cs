@@ -20,7 +20,16 @@ public class ProductController: Controller {
         return await _mongoDBService.GetAsync();
     }
 
-    // Faire un Get by ID
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var product = await _mongoDBService.GetByIdAsync(id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+        return Ok(product);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] Product product) {

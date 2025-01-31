@@ -4,23 +4,23 @@ using System.Text.Json.Serialization;
 
 namespace MongoExample.Models;
 
-public class Product {
-
+public class Product
+{
     [BsonId]
     [BsonRepresentation(BsonType.String)]
     [BsonElement("_id")]
     [JsonIgnore]
-    public Guid Id { get; set; } = Guid.NewGuid(); //Génération UUID
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Name { get; set; } = null!;
     public int Stock { get; set; }
     public int Price { get; set; }
-    
-    [BsonRepresentation(BsonType.String)]
-    [BsonElement("ID_Category")]
-    [JsonIgnore]
-    public Guid CategoryId { get; set; } = Guid.NewGuid(); //Génération UUID
+
+    [BsonIgnore]
     public string Category { get; set; } = null!;
 
-
+    [BsonRepresentation(BsonType.String)]
+    [BsonElement("CategoryId")]
+    [JsonIgnore]
+    public Guid CategoryId { get; set; }
 }
