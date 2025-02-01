@@ -2,7 +2,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
 
-namespace MongoExample.Models;
+namespace MongoExample.Domain.Entities;
 
 public class Category
 {

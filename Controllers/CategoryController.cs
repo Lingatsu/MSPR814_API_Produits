@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using MongoExample.Services;
-using MongoExample.Models;
+using MongoExample.Application.DTOs;
+using MongoExample.Application.Interfaces;
 
 namespace MongoExample.Controllers;
 
@@ -8,56 +8,47 @@ namespace MongoExample.Controllers;
 [Route("api/[controller]")]
 public class CategoryController : ControllerBase
 {
-    private readonly MongoDBService _mongoDBService;
+    private readonly ICategoryService _categoryService;
 
-    public CategoryController(MongoDBService mongoDBService)
+    public CategoryController(ICategoryService categoryService)
     {
-        _mongoDBService = mongoDBService;
+        _categoryService = categoryService;
     }
 
     [HttpGet]
-    public async Task<List<Category>> Get()
+    public async Task<ActionResult<List<CategoryDto>>> Get()
     {
-        return await _mongoDBService.GetCategoriesAsync();
+        return Ok(await _categoryService.GetAllCategoriesAsync());
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<CategoryDto>> GetById(Guid id)
     {
-        var category = await _mongoDBService.GetCategoryByIdAsync(id);
-        if (category == null)
-        {
-            return NotFound();
-        }
+        var category = await _categoryService.GetCategoryByIdAsync(id);
+        if (category == null) return NotFound();
         return Ok(category);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Category category)
+    public async Task<IActionResult> Create([FromBody] CategoryDto categoryDto)
     {
-        await _mongoDBService.CreateCategoryAsync(category);
-        return CreatedAtAction(nameof(GetById), new { id = category.Id }, category);
+        await _categoryService.AddCategoryAsync(categoryDto);
+        return CreatedAtAction(nameof(GetById), new { id = categoryDto.Id }, categoryDto);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Category category)
+    public async Task<IActionResult> Update(Guid id, [FromBody] CategoryDto categoryDto)
     {
-        var updated = await _mongoDBService.UpdateCategoryAsync(id, category);
-        if (!updated)
-        {
-            return NotFound();
-        }
+        var updated = await _categoryService.UpdateCategoryAsync(id, categoryDto);
+        if (!updated) return NotFound();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var deleted = await _mongoDBService.DeleteCategoryAsync(id);
-        if (!deleted)
-        {
-            return NotFound();
-        }
+        var deleted = await _categoryService.DeleteCategoryAsync(id);
+        if (!deleted) return NotFound();
         return NoContent();
     }
 }

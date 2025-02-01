@@ -2,7 +2,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
 
-namespace MongoExample.Models;
+namespace MongoExample.Domain.Entities;
 
 public class Product
 {
@@ -16,7 +16,6 @@ public class Product
     public int Stock { get; set; }
     public int Price { get; set; }
 
-    [BsonIgnore]
     public string Category { get; set; } = null!;
 
     [BsonRepresentation(BsonType.String)]

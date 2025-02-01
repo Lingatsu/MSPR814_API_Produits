@@ -1,52 +1,54 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
-using MongoExample.Services;
-using MongoExample.Models;
+using MongoExample.Application.DTOs;
+using MongoExample.Application.Interfaces;
 
-namespace MongoExample.Controllers; 
+namespace MongoExample.Controllers;
 
-[Controller]
+[ApiController]
 [Route("api/[controller]")]
-public class ProductController: Controller {
-    
-    private readonly MongoDBService _mongoDBService;
+public class ProductController : ControllerBase
+{
+    private readonly IProductService _productService;
 
-    public ProductController(MongoDBService mongoDBService) {
-        _mongoDBService = mongoDBService;
+    public ProductController(IProductService productService)
+    {
+        _productService = productService;
     }
 
     [HttpGet]
-    public async Task<List<Product>> Get() {
-        return await _mongoDBService.GetAsync();
+    public async Task<ActionResult<List<ProductDto>>> Get()
+    {
+        return Ok(await _productService.GetAllProductsAsync());
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<ProductDto>> GetById(Guid id)
     {
-        var product = await _mongoDBService.GetByIdAsync(id);
-        if (product == null)
-        {
-            return NotFound();
-        }
+        var product = await _productService.GetProductByIdAsync(id);
+        if (product == null) return NotFound();
         return Ok(product);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Product product) {
-        await _mongoDBService.CreateAsync(product);
-        return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+    public async Task<IActionResult> Create([FromBody] ProductDto productDto)
+    {
+        await _productService.AddProductAsync(productDto);
+        return CreatedAtAction(nameof(GetById), new { id = productDto.Id }, productDto);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] Product updatedProduct) {
-        await _mongoDBService.UpdateProductAsync(id, updatedProduct);
-        return NoContent();         
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id) {
-        await _mongoDBService.DeleteAsync(id);
+    public async Task<IActionResult> Update(Guid id, [FromBody] ProductDto productDto)
+    {
+        var updated = await _productService.UpdateProductAsync(id, productDto);
+        if (!updated) return NotFound();
         return NoContent();
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var deleted = await _productService.DeleteProductAsync(id);
+        if (!deleted) return NotFound();
+        return NoContent();
+    }
 }
