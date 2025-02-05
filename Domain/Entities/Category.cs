@@ -10,7 +10,7 @@ public class Category
     [BsonRepresentation(BsonType.String)]
     [BsonElement("_id")]
     [JsonIgnore]
-    public Guid Id { get; set; } = Guid.NewGuid(); // Génération automatique de l'UUID
+    public Guid Id { get; set; } 
 
     public string Name { get; set; } = null!;
 }

@@ -33,13 +33,18 @@ public class ProductService : IProductService
 
     public async Task AddProductAsync(ProductDto productDto)
     {
-        var category = await _categoryRepository.GetByIdAsync(productDto.CategoryId);
+        var category = await _categoryRepository.GetByNameAsync(productDto.Category);
         if (category == null)
         {
-            throw new Exception("Category does not exist");
+            category = new Category { Name = productDto.Category };
+            await _categoryRepository.AddAsync(category);
         }
 
         var product = _mapper.Map<Product>(productDto);
+
+        product.Id = Guid.NewGuid();
+        product.CategoryId = category.Id;
+
         await _productRepository.AddAsync(product);
     }
 

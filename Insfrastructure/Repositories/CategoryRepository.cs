@@ -26,6 +26,11 @@ public class CategoryRepository : ICategoryRepository
         return await _categories.Find(c => c.Id == id).FirstOrDefaultAsync();
     }
 
+        public async Task<Category?> GetByNameAsync(string name)
+    {
+        return await _categories.Find(c => c.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+    }
+
     public async Task AddAsync(Category category)
     {
         await _categories.InsertOneAsync(category);

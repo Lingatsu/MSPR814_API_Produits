@@ -10,7 +10,7 @@ public class Product
     [BsonRepresentation(BsonType.String)]
     [BsonElement("_id")]
     [JsonIgnore]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
     public string Name { get; set; } = null!;
     public int Stock { get; set; }

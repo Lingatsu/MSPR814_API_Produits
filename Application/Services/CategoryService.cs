@@ -32,6 +32,8 @@ public class CategoryService : ICategoryService
     public async Task AddCategoryAsync(CategoryDto categoryDto)
     {
         var category = _mapper.Map<Category>(categoryDto);
+
+        category.Id = Guid.NewGuid();
         await _categoryRepository.AddAsync(category);
     }
 
