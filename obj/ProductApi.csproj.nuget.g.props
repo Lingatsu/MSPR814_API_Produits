@@ -18,6 +18,5 @@
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_Extensions_ApiDescription_Server Condition=" '$(PkgMicrosoft_Extensions_ApiDescription_Server)' == '' ">/home/kevin/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5</PkgMicrosoft_Extensions_ApiDescription_Server>
-    <PkgFluentAssertions Condition=" '$(PkgFluentAssertions)' == '' ">/home/kevin/.nuget/packages/fluentassertions/8.0.1</PkgFluentAssertions>
   </PropertyGroup>
 </Project>

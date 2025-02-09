@@ -42,17 +42,9 @@
               "target": "Package",
               "version": "[13.0.1, )"
             },
-            "FluentAssertions": {
-              "target": "Package",
-              "version": "[8.0.1, )"
-            },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[3.1.0, )"
-            },
-            "Moq": {
-              "target": "Package",
-              "version": "[4.20.72, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
