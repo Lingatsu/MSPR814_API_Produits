@@ -1,6 +1,6 @@
-using MongoExample.Application.DTOs;
+using ProductApi.Application.DTOs;
 
-namespace MongoExample.Application.Interfaces;
+namespace ProductApi.Application.Interface.Services;
 
 public interface IProductService
 {

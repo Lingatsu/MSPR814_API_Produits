@@ -1,4 +1,4 @@
-namespace MongoExample.Application.DTOs;
+namespace ProductApi.Application.DTOs;
 
 public class ProductDto
 {

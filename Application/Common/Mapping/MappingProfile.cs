@@ -1,8 +1,8 @@
 using AutoMapper;
-using MongoExample.Application.DTOs;
-using MongoExample.Domain.Entities;
+using ProductApi.Application.DTOs;
+using ProductApi.Domain.Entities;
 
-namespace MongoExample.Application.Mappings;
+namespace ProductApi.Application.Common.Mapping;
 
 public class MappingProfile : Profile
 {

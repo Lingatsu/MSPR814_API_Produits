@@ -1,19 +1,11 @@
-//using MongoExample.Models;
-//using MongoExample.Services;
-using MongoExample.Application.DTOs;
-using MongoExample.Application.Interfaces;
-using MongoExample.Application.Services;
-using MongoExample.Infrastructure.Database;
-using MongoExample.Infrastructure.Repositories;
-using MongoExample.Controllers;
-using MongoExample.Domain.Entities;
-using MongoExample.Application.Mappings;
-
-
+using ProductApi.Infrastructure.Repositories;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson;
-using System;
+using ProductApi.Application.Services;
+using ProductApi.Application.Interface.Services;
+using ProductApi.Infrastructure.Database;
+using ProductApi.Domain.Interface.Repositories;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 

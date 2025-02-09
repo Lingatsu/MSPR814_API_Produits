@@ -1,9 +1,10 @@
-using MongoExample.Domain.Entities;
-using MongoExample.Infrastructure.Database;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
+using ProductApi.Domain.Entities;
+using ProductApi.Infrastructure.Database;
+using ProductApi.Domain.Interface.Repositories;
 
-namespace MongoExample.Infrastructure.Repositories;
+namespace ProductApi.Infrastructure.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {

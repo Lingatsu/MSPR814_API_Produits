@@ -1,4 +1,4 @@
-namespace MongoExample.Infrastructure.Database;
+namespace ProductApi.Infrastructure.Database;
 
 public class MongoDBSettings {
 

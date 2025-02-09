@@ -1,10 +1,10 @@
-using MongoExample.Application.DTOs;
-using MongoExample.Application.Interfaces;
-using MongoExample.Domain.Entities;
-using MongoExample.Infrastructure.Repositories;
 using AutoMapper;
+using ProductApi.Application.DTOs;
+using ProductApi.Domain.Entities;
+using ProductApi.Domain.Interface.Repositories;
+using ProductApi.Application.Interface.Services;
 
-namespace MongoExample.Application.Services;
+namespace ProductApi.Application.Services;
 
 public class ProductService : IProductService
 {

@@ -1,6 +1,6 @@
-using MongoExample.Domain.Entities;
+using ProductApi.Domain.Entities;
 
-namespace MongoExample.Infrastructure.Repositories;
+namespace ProductApi.Domain.Interface.Repositories;
 
 public interface ICategoryRepository
 {

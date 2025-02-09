@@ -2,7 +2,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
 
-namespace MongoExample.Domain.Entities;
+namespace ProductApi.Domain.Entities;
 
 public class Product
 {

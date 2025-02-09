@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using MongoExample.Application.DTOs;
-using MongoExample.Application.Interfaces;
+using ProductApi.Application.DTOs;
+using ProductApi.Application.Interface.Services;
 
-namespace MongoExample.Controllers;
+namespace ProductApi.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
