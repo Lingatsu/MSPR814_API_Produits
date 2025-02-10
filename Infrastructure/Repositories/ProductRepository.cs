@@ -32,11 +32,28 @@ public class ProductRepository : IProductRepository
         await _products.InsertOneAsync(product);
     }
 
-    public async Task<bool> UpdateAsync(Guid id, Product product)
-    {
-        var result = await _products.ReplaceOneAsync(p => p.Id == id, product);
-        return result.ModifiedCount > 0;
-    }
+public async Task<bool> UpdateAsync(Guid id, Product product)
+{
+    var updateDefinition = new List<UpdateDefinition<Product>>();
+    
+    if (!string.IsNullOrEmpty(product.Name))
+        updateDefinition.Add(Builders<Product>.Update.Set(p => p.Name, product.Name));
+
+    if (product.Price > 0) // Supposons que 0 n'est pas une valeur valide pour un prix
+        updateDefinition.Add(Builders<Product>.Update.Set(p => p.Price, product.Price));
+
+    if (product.Stock >= 0) // Stock ne doit pas être négatif
+        updateDefinition.Add(Builders<Product>.Update.Set(p => p.Stock, product.Stock));
+
+    if (updateDefinition.Count == 0)
+        return false; // Aucun champ à mettre à jour
+
+    var update = Builders<Product>.Update.Combine(updateDefinition);
+    var result = await _products.UpdateOneAsync(p => p.Id == id, update);
+    
+    return result.ModifiedCount > 0;
+}
+
 
     public async Task<bool> DeleteAsync(Guid id)
     {

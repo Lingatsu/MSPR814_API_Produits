@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductApi.Application.DTOs;
 using ProductApi.Application.Interface.Services;
+using ProductApi.Infrastructure.Services;
 
 namespace ProductApi.Presentation.Controllers;
 
@@ -9,10 +10,12 @@ namespace ProductApi.Presentation.Controllers;
 public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
+    private readonly RabbitMqService _rabbitMqService;
 
-    public ProductController(IProductService productService)
+    public ProductController(IProductService productService, RabbitMqService rabbitMqService)
     {
         _productService = productService;
+        _rabbitMqService = rabbitMqService;
     }
 
     [HttpGet]
@@ -33,6 +36,7 @@ public class ProductController : ControllerBase
     public async Task<IActionResult> Create([FromBody] ProductDto productDto)
     {
         await _productService.AddProductAsync(productDto);
+        _rabbitMqService.SendMessage("Product created: " + productDto.Name, "product_queue");
         return CreatedAtAction(nameof(GetById), new { id = productDto.Id }, productDto);
     }
 
@@ -41,6 +45,7 @@ public class ProductController : ControllerBase
     {
         var updated = await _productService.UpdateProductAsync(id, productDto);
         if (!updated) return NotFound();
+        _rabbitMqService.SendMessage("Product updated: " + productDto.Name, "product_queue");
         return NoContent();
     }
 
@@ -49,6 +54,20 @@ public class ProductController : ControllerBase
     {
         var deleted = await _productService.DeleteProductAsync(id);
         if (!deleted) return NotFound();
+        _rabbitMqService.SendMessage("Product deleted: " + id, "product_queue");
         return NoContent();
+    }
+
+    [HttpPost("consume")]
+    public IActionResult Consume()
+    {
+        _rabbitMqService.ConsumeMessage("order_queue", ProcessOrderMessage);
+        return Ok("Consuming messages from order_queue");
+    }
+
+    private void ProcessOrderMessage(string message)
+    {
+        // Logique pour traiter le message de commande
+        Console.WriteLine("Received message: " + message);
     }
 }
