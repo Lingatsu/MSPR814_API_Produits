@@ -34,11 +34,21 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task AddAsync(Category category)
     {
+        if (category.Name == "string")
+        {
+            throw new ArgumentException("Invalid category name");
+        }
+
         await _categories.InsertOneAsync(category);
     }
 
     public async Task<bool> UpdateAsync(Guid id, Category category)
     {
+        if (category.Name == "string")
+        {
+            throw new ArgumentException("Invalid category name");
+        }
+
         var result = await _categories.ReplaceOneAsync(c => c.Id == id, category);
         return result.ModifiedCount > 0;
     }

@@ -29,6 +29,26 @@ public class ProductRepository : IProductRepository
 
     public async Task AddAsync(Product product)
     {
+        if (product.Name == "string")
+        {
+            throw new ArgumentException("Invalid product name");
+        }
+
+        if (product.Stock == 0)
+        {
+            throw new ArgumentException("Invalid stock");
+        }
+
+        if (product.Price == 0)
+        {
+            throw new ArgumentException("Invalid price");
+        }
+
+        if (product.Category == "string")
+        {
+            throw new ArgumentException("Invalid category");
+        }
+
         await _products.InsertOneAsync(product);
     }
 
@@ -36,14 +56,19 @@ public async Task<bool> UpdateAsync(Guid id, Product product)
 {
     var updateDefinition = new List<UpdateDefinition<Product>>();
     
-    if (!string.IsNullOrEmpty(product.Name))
+    if (product.Name == "string") 
+    {
         updateDefinition.Add(Builders<Product>.Update.Set(p => p.Name, product.Name));
+    }
 
-    if (product.Price > 0) // Supposons que 0 n'est pas une valeur valide pour un prix
+    if (product.Price > 0) // 0 n'est pas une valeur valide pour un prix
         updateDefinition.Add(Builders<Product>.Update.Set(p => p.Price, product.Price));
 
     if (product.Stock >= 0) // Stock ne doit pas être négatif
         updateDefinition.Add(Builders<Product>.Update.Set(p => p.Stock, product.Stock));
+
+    if (product.Category == "string")
+        updateDefinition.Add(Builders<Product>.Update.Set(p => p.Category, product.Category));
 
     if (updateDefinition.Count == 0)
         return false; // Aucun champ à mettre à jour
@@ -53,8 +78,6 @@ public async Task<bool> UpdateAsync(Guid id, Product product)
     
     return result.ModifiedCount > 0;
 }
-
-
     public async Task<bool> DeleteAsync(Guid id)
     {
         var result = await _products.DeleteOneAsync(p => p.Id == id);
