@@ -17,8 +17,6 @@ WORKDIR /app
 # Copier uniquement les fichiers nécessaires
 COPY --from=build /app/out .
 
-ENV ASPNETCORE_URLS=http://+:5000
-
 # Exposer les ports HTTP/HTTPS
 EXPOSE 5000
 
