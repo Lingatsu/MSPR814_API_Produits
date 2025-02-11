@@ -18,7 +18,7 @@ WORKDIR /app
 COPY --from=build /app/out .
 
 # Exposer les ports HTTP/HTTPS
-EXPOSE 5000 5001
+EXPOSE 5000
 
 # Commande pour lancer l’API
 CMD ["dotnet", "ProductApi.dll"]
