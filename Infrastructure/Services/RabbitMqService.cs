@@ -9,13 +9,17 @@ namespace ProductApi.Infrastructure.Services
         private readonly IConnection _connection;
         private readonly IModel _channel;
 
-        public RabbitMqService()
+        public RabbitMqService(IConfiguration configuration)
         {
+            var rabbitMqHost = configuration["RABBITMQ_HOST"];
+            var rabbitMqUser = configuration["RABBITMQ_USER"];
+            var rabbitMqPass = configuration["RABBITMQ_PASS"];
+
             var factory = new ConnectionFactory()
             {
-                HostName = "rabbitmq",
-                UserName = "guest",
-                Password = "guest"
+                HostName = rabbitMqHost,
+                UserName = rabbitMqUser,
+                Password = rabbitMqPass
             };
 
             _connection = factory.CreateConnection();
