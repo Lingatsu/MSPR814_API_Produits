@@ -12,8 +12,22 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration MongoDB
-builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
+// Configuration MongoDB avec la variable d'environnement
+var mongoUri = Environment.GetEnvironmentVariable("MONGO_URI"); // Récupère la variable d'environnement
+
+if (string.IsNullOrEmpty(mongoUri))
+{
+    throw new InvalidOperationException("MongoDB connection URI is not set in environment variables.");
+}
+
+// Ajoute la configuration de MongoDB avec l'URI récupéré
+builder.Services.Configure<MongoDBSettings>(options =>
+{
+    options.ConnectionURI = mongoUri; // Utilise l'URI récupéré
+    options.DatabaseName = "Product"; // Par exemple, tu peux définir d'autres propriétés
+    options.ProductCollection = "Product";
+    options.CategoryCollection = "Category";
+});
 
 // Services Application
 builder.Services.AddScoped<ICategoryService, CategoryService>();
