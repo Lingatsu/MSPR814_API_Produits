@@ -21,4 +21,4 @@ COPY --from=build /app/out .
 EXPOSE 5000 5001
 
 # Commande pour lancer l’API
-CMD ["dotnet", "ProductApi.dll"]
+ENTRYPOINT ["dotnet", "ProductApi.dll"]
