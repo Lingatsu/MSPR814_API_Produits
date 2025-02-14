@@ -27,6 +27,9 @@ jobs:
         with:
           dotnet-version: '8.0'
 
+      - name: Clean project
+        run: dotnet clean
+
       - name: Restore dependencies
         run: dotnet restore
 
