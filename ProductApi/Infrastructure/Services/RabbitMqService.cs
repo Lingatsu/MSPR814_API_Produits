@@ -1,4 +1,5 @@
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
@@ -57,19 +58,42 @@ namespace ProductApi.Infrastructure.Services
         public void SendMessage<T>(T messageObject, string queueName)
         {
             _channel.QueueDeclare(queue: queueName,
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
+                                durable: false,
+                                exclusive: false,
+                                autoDelete: false,
+                                arguments: null);
 
-            // Sérialisation JSON
-            string messageJson = JsonSerializer.Serialize(messageObject);
+            // Sérialisation JSON avec options pour ne pas échapper les caractères Unicode
+            var options = new JsonSerializerOptions
+            {
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Évite l'échappement des caractères spéciaux
+            };
+            string messageJson = JsonSerializer.Serialize(messageObject, options);
             var body = Encoding.UTF8.GetBytes(messageJson);
 
             _channel.BasicPublish(exchange: "",
-                                 routingKey: queueName,
-                                 basicProperties: null,
-                                 body: body);
+                                routingKey: queueName,
+                                basicProperties: null,
+                                body: body);
+        }
+
+        public void ConsumeMessage(string queueName, Action<string> onMessageReceived)
+        {
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                onMessageReceived(message);
+            };
+            _channel.BasicConsume(queue: queueName,
+                                 autoAck: true,
+                                 consumer: consumer);
+        }
+
+        public void NotifyUser(string message)
+        {
+            SendMessage(message, "user_queue");
         }
     }
 }
