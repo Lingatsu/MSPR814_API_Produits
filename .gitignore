@@ -1,4 +1,7 @@
 #donet
+bin
+obj
+.sonarqube
 ProductApi/obj/Debug
 ProductApi/bin/Debug
 ProductApi/dockerfile
