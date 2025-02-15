@@ -5,7 +5,9 @@ on:
     branches:
       - master
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    types: [synchronize]  # Se déclenche uniquement quand des commits sont ajoutés à la PR
 
 jobs:
   sonar-analyze:
