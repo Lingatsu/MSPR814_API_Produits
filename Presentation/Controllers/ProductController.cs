@@ -36,7 +36,7 @@ public class ProductController : ControllerBase
     public async Task<IActionResult> Create([FromBody] ProductDto productDto)
     {
         await _productService.AddProductAsync(productDto);
-        _rabbitMqService.SendMessage("Product created: " + productDto.Name, "product_queue");
+        _rabbitMqService.SendMessage(productDto, "product_info_queue");
         return CreatedAtAction(nameof(GetById), new { id = productDto.Id }, productDto);
     }
 
@@ -45,7 +45,7 @@ public class ProductController : ControllerBase
     {
         var updated = await _productService.UpdateProductAsync(id, productDto);
         if (!updated) return NotFound();
-        _rabbitMqService.SendMessage("Product updated: " + productDto.Name, "product_queue");
+        _rabbitMqService.SendMessage("Product updated: " + productDto.Name, "product_info_queue");
         return NoContent();
     }
 
@@ -54,7 +54,7 @@ public class ProductController : ControllerBase
     {
         var deleted = await _productService.DeleteProductAsync(id);
         if (!deleted) return NotFound();
-        _rabbitMqService.SendMessage("Product deleted: " + id, "product_queue");
+        _rabbitMqService.SendMessage("Product deleted: " + id, "product_info_queue");
         return NoContent();
     }
 

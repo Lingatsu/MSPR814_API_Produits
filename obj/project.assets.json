@@ -1302,11 +1302,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/kevin/Projets/MSPR_TPRE814/ProductApi/ProductApi.csproj",
+      "projectUniqueName": "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/ProductApi.csproj",
       "projectName": "ProductApi",
-      "projectPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApi/ProductApi.csproj",
+      "projectPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/ProductApi.csproj",
       "packagesPath": "/home/kevin/.nuget/packages/",
-      "outputPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApi/obj/",
+      "outputPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/kevin/.nuget/NuGet/NuGet.Config"

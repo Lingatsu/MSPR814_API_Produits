@@ -1,6 +1,7 @@
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
+using System.Text.Json;
 
 namespace ProductApi.Infrastructure.Services
 {
@@ -22,20 +23,26 @@ namespace ProductApi.Infrastructure.Services
             _channel = _connection.CreateModel();
         }
 
-        public void SendMessage(string message, string queueName)
+        public void SendMessage<T>(T messageObject, string queueName)
         {
             _channel.QueueDeclare(queue: queueName,
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
+                                durable: false,
+                                exclusive: false,
+                                autoDelete: false,
+                                arguments: null);
 
-            var body = Encoding.UTF8.GetBytes(message);
+            // Sérialisation JSON avec options pour ne pas échapper les caractères Unicode
+            var options = new JsonSerializerOptions
+            {
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Évite l'échappement des caractères spéciaux
+            };
+            string messageJson = JsonSerializer.Serialize(messageObject, options);
+            var body = Encoding.UTF8.GetBytes(messageJson);
 
             _channel.BasicPublish(exchange: "",
-                                 routingKey: queueName,
-                                 basicProperties: null,
-                                 body: body);
+                                routingKey: queueName,
+                                basicProperties: null,
+                                body: body);
         }
 
         public void ConsumeMessage(string queueName, Action<string> onMessageReceived)
