@@ -6840,8 +6840,8 @@
     },
     "ProductApi/1.0.0": {
       "type": "project",
-      "path": "../ProductApi.csproj",
-      "msbuildProject": "../ProductApi.csproj"
+      "path": "../ProductApi/ProductApi.csproj",
+      "msbuildProject": "../ProductApi/ProductApi.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -6860,11 +6860,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/kevin/Projets/MSPR_TPRE814/ProductApi/ProductApi.Tests/ProductApi.Tests.csproj",
+      "projectUniqueName": "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/ProductApi.Tests/ProductApi.Tests.csproj",
       "projectName": "ProductApi.Tests",
-      "projectPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApi/ProductApi.Tests/ProductApi.Tests.csproj",
+      "projectPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/ProductApi.Tests/ProductApi.Tests.csproj",
       "packagesPath": "/home/kevin/.nuget/packages/",
-      "outputPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApi/ProductApi.Tests/obj/",
+      "outputPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/ProductApi.Tests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/kevin/.nuget/NuGet/NuGet.Config"
@@ -6879,8 +6879,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/home/kevin/Projets/MSPR_TPRE814/ProductApi/ProductApi.csproj": {
-              "projectPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApi/ProductApi.csproj"
+            "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/ProductApi/ProductApi.csproj": {
+              "projectPath": "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/ProductApi/ProductApi.csproj"
             }
           }
         }
