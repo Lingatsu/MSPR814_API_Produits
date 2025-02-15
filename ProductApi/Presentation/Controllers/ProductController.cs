@@ -36,7 +36,7 @@ public class ProductController : ControllerBase
     public async Task<IActionResult> Create([FromBody] ProductDto productDto)
     {
         await _productService.AddProductAsync(productDto);
-        _rabbitMqService.SendMessage("Product created: " + productDto.Name, "product_info_queue");
+        _rabbitMqService.SendMessage(productDto, "product_info_queue");
         return CreatedAtAction(nameof(GetById), new { id = productDto.Id }, productDto);
     }
 
