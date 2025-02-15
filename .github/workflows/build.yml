@@ -42,7 +42,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml"
+        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml" /d:sonar.verbose=true
 
     - name: Final SonarCloud Analysis
       env:
@@ -66,7 +66,7 @@ jobs:
 
       - name: Construire l'image Docker
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/product-api:${{ github.sha }} -t ${{ secrets.DOCKER_USERNAME }}/product-api:latest -f ProductApi/Dockerfile .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/product-api:${{ github.sha }} -t ${{ secrets.DOCKER_USERNAME }}/product-api:latest -f ProductApiRepo/dockerfile .
 
       - name: Pousser l'image Docker
         run: |
