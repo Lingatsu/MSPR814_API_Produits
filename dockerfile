@@ -2,13 +2,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Optimisation : ne copier que le csproj d'abord pour mieux utiliser le cache Docker
-COPY *.csproj ./
-RUN dotnet restore
+# Copier les fichiers du projet
+COPY ProductApi/ProductApi.csproj ./ProductApi/
+RUN dotnet restore ProductApi/ProductApi.csproj
 
-# Copier le reste et compiler
-COPY . .
-RUN dotnet publish -c Release -o out
+# Copier tout le code source et compiler
+COPY ProductApi/ ./ProductApi/
+WORKDIR /app/ProductApi
+RUN dotnet publish -c Release -o /app/out
 
 # Étape 2 : Image de runtime légère
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

@@ -1,5 +1,7 @@
 #donet
-obj/Debug
-bin/Debug
+ProductApi/obj/Debug
+ProductApi/bin/Debug
+ProductApi/dockerfile
+ProductApi.Tests/obj/Debug
+ProductApi.Tests/bin/Debug
 .github/workflows
-dockerfile
