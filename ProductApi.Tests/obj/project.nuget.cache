@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LmyYKypcYGSVwgWVr0ARP7mY9CvUfRtxwNHAsC4/gRQZmAn66vWhq3p7eliIXDQiWe2opeqc4NYxLAy6gCtK3w==",
+  "dgSpecHash": "/24W7RzEUL3SHPlsgtT/laUgr0Q9mY4wcj4jeYpY1vP67VJpjK0aq7OrFkeL/A7inBeBOoQS5SFxR8aoXKplrg==",
   "success": true,
-  "projectFilePath": "/home/kevin/Projets/MSPR_TPRE814/ProductApi/ProductApi.Tests/ProductApi.Tests.csproj",
+  "projectFilePath": "/home/kevin/Projets/MSPR_TPRE814/ProductApiRepo/ProductApi.Tests/ProductApi.Tests.csproj",
   "expectedPackageFiles": [
     "/home/kevin/.nuget/packages/automapper/13.0.1/automapper.13.0.1.nupkg.sha512",
     "/home/kevin/.nuget/packages/castle.core/5.1.1/castle.core.5.1.1.nupkg.sha512",
