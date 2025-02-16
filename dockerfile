@@ -12,10 +12,10 @@ COPY ./ProductApi.Tests ./ProductApi.Tests
 RUN dotnet restore ./ProductApi/ProductApi.csproj
 
 # Construire le projet en mode Release
-RUN dotnet build -c Release
+RUN dotnet build ./ProductApi/ProductApi.csproj -c Release
 
 # Publier le projet dans le répertoire "out"
-RUN dotnet publish -c Release -o out
+RUN dotnet publish ./ProductApi/ProductApi.csproj -c Release -o /app/out
 
 # Étape 2 : Utiliser une image de base runtime pour exécuter l'application
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
