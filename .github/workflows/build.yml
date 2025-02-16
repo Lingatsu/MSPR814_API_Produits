@@ -23,14 +23,14 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.112'
-
+  
     - name: Start SonarCloud analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.verbose=true /d:sonar.scanner.scanAll=false
-
+        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.verbose=true /d:sonar.scanner.scanAll=false
+    
     - name: Restore dependencies
       run: dotnet restore ProductApi/ProductApi.sln
 
@@ -39,24 +39,17 @@ jobs:
 
     - name: Run tests with coverage using dotnet-coverage
       run: |
-        dotnet tool install --global dotnet-coverage # Installe l'outil dotnet-coverage s'il n'est pas déjà installé
-        dotnet-coverage collect "dotnet test ProductApi.Tests/ProductApi.Tests.csproj --configuration Release --no-build" -f xml -o "TestResults/coverage.xml"  # Collecte la couverture en XML
+        dotnet tool install --global dotnet-coverage
+        dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
 
     - name: List files in TestResults
       run: |
         ls -R TestResults
 
-    - name: Start SonarCloud analysis with coverage
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="TestResults/coverage.xml" /d:sonar.verbose=true /d:sonar.scanner.scanAll=false
-
     - name: Final SonarCloud Analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-
      
   # docker-build-and-push:
   #   name: Build and Push Docker Image
