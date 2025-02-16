@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copier les fichiers du projet
 COPY ProductApi/ProductApi.csproj ./ProductApi/
-RUN dotnet restore ProductApi/ProductApi.csproj
+RUN dotnet restore
 
 # Copier tout le code source et compiler
 COPY ProductApi/ ./ProductApi/
