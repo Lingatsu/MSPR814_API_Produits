@@ -30,4 +30,4 @@ COPY --from=build /app/out .
 EXPOSE 5000 5001
 
 # Lancer l'application
-ENTRYPOINT ["dotnet", "ApiProduct.dll"]
+ENTRYPOINT ["dotnet", "ProductApi.dll"]
