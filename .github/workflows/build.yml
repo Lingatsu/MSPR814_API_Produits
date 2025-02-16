@@ -32,19 +32,24 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        dotnet test ProductApi.Tests/ProductApi.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=ApiProduct.Tests/TestResults/*/coverage.cobertura.xml
+        dotnet test ProductApi.Tests/ProductApi.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=ProductApi.Tests/TestResults/*/coverage.cobertura.xml
+
+    - name: Check if coverage file exists
+      run: |
+        ls -R ProductApi.Tests/TestResults/
+        cat ProductApi.Tests/*/TestResults/coverage.cobertura.xml || echo "Coverage file not found"
 
     - name: Start SonarCloud analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="ApiProduct.Tests/TestResults/*/coverage.cobertura.xml" /d:sonar.verbose=true
+        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="ProductApi.Tests/TestResults/*/coverage.cobertura.xml"
 
     - name: Final SonarCloud Analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true
 
 
   docker-build-and-push:

@@ -50,6 +50,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var productService = services.GetRequiredService<IProductService>();
+    await DatabaseInitializer.SeedProducts(productService);
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseAuthorization();
