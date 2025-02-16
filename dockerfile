@@ -5,8 +5,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copier les fichiers du projet dans le conteneur
-COPY ./ProductApi .
-COPY ./ProductApi.Tests .
+COPY ./ProductApi ./ProductApi
+COPY ./ProductApi.Tests ./ProductApi.Tests
 
 # Restaurer les dépendances
 RUN dotnet restore ./ProductApi/ProductApi.csproj
