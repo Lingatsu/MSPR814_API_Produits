@@ -29,8 +29,8 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="ProductApi.Tests/TestResults/"  
-
+        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/*/coverage.cobertura.xml" /d:sonar.verbose=true
+  
     - name: Restore dependencies
       run: dotnet restore ProductApi/ProductApi.sln
 
@@ -39,8 +39,8 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        dotnet test ProductApi.Tests/ProductApi.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="TestResults/"
-
+        dotnet test ProductApi.Tests/ProductApi.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/coverage.cobertura.xml
+   
     # - name: Check if coverage file exists
     #   run: |
     #     ls -R ProductApi.Tests/TestResults/
@@ -50,8 +50,7 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true
-
-
+      
   docker-build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
