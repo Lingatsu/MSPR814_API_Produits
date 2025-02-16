@@ -9,7 +9,7 @@ COPY ./ProductApi .
 COPY ./ProductApi.Tests .
 
 # Restaurer les dépendances
-RUN dotnet restore
+RUN dotnet restore ./ProductApi/ProductApi.csproj
 
 # Construire le projet en mode Release
 RUN dotnet build -c Release
