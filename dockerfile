@@ -1,27 +1,32 @@
-# Étape 1 : Build de l'application
+# Étape 1 : Utiliser une image de base .NET SDK
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers du projet
-COPY ProductApi/ProductApi.csproj ./ProductApi/
+# Copier les fichiers du projet dans le conteneur
+COPY ./ProductApi .
+
+# Restaurer les dépendances
 RUN dotnet restore
 
-# Copier tout le code source et compiler
-COPY ProductApi/ ./ProductApi/
-WORKDIR /app/ProductApi
+# Construire le projet en mode Release
+RUN dotnet build -c Release
 
-# Publier uniquement le projet principal (exclure les tests)
-RUN dotnet publish ProductApi.csproj -c Release -o /app/out --no-restore
+# Publier le projet dans le répertoire "out"
+RUN dotnet publish -c Release -o out
 
-# Étape 2 : Image de runtime légère
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Étape 2 : Utiliser une image de base runtime pour exécuter l'application
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier uniquement les fichiers nécessaires
+# Copier les fichiers publiés depuis l'étape précédente
 COPY --from=build /app/out .
 
-# Exposer les ports HTTP/HTTPS
+# Exposer le port sur lequel l'application va écouter
 EXPOSE 5000 5001
 
-# Commande pour lancer l’API
-ENTRYPOINT ["dotnet", "ProductApi.dll"]
+# Lancer l'application
+ENTRYPOINT ["dotnet", "ApiProduct.dll"]
