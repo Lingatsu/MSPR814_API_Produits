@@ -40,11 +40,6 @@ jobs:
     - name: Run tests with coverage
       run: |
         dotnet test ProductApi.Tests/ProductApi.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/coverage.cobertura.xml
-   
-    # - name: Check if coverage file exists
-    #   run: |
-    #     ls -R ProductApi.Tests/TestResults/
-    #     cat ProductApi.Tests/TestResults/coverage.cobertura.xml || echo "Coverage file not found"
 
     - name: Final SonarCloud Analysis
       env:
@@ -67,7 +62,7 @@ jobs:
 
       - name: Construire l'image Docker
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/product-api:${{ github.sha }} -t ${{ secrets.DOCKER_USERNAME }}/product-api:latest -f ProductApiRepo/dockerfile .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/product-api:${{ github.sha }} -t ${{ secrets.DOCKER_USERNAME }}/product-api:latest -f ./dockerfile .
 
       - name: Pousser l'image Docker
         run: |
