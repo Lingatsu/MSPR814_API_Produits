@@ -9,7 +9,9 @@ RUN dotnet restore ProductApi/ProductApi.csproj
 # Copier tout le code source et compiler
 COPY ProductApi/ ./ProductApi/
 WORKDIR /app/ProductApi
-RUN dotnet publish -c Release -o /app/out
+
+# Publier uniquement le projet principal (exclure les tests)
+RUN dotnet publish ProductApi.csproj -c Release -o /app/out --no-restore
 
 # Étape 2 : Image de runtime légère
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
