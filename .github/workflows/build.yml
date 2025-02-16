@@ -45,7 +45,7 @@ on:
 #       env:
 #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 #       run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-      
+jobs:      
   docker-build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
