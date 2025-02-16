@@ -1,6 +1,8 @@
 using ProductApi.Application.DTOs;
 using ProductApi.Application.Interface.Services;
 
+namespace ProductApi.Infrastructure.Database;
+
 public static class DatabaseInitializer
 {
     public static async Task SeedProducts(IProductService productService)
