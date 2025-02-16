@@ -49,7 +49,7 @@ jobs:
     - name: Final SonarCloud Analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true
+      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
       
   docker-build-and-push:
     name: Build and Push Docker Image
