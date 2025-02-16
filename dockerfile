@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copier les fichiers du projet dans le conteneur
 COPY ./ProductApi .
+COPY ./ProductApi.Tests .
 
 # Restaurer les dépendances
 RUN dotnet restore
