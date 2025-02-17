@@ -29,7 +29,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.scanner.scanAll=false
+        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.verbose=true /d:sonar.scanner.scanAll=false
     
     - name: Restore dependencies
       run: dotnet restore ProductApi/ProductApi.sln
