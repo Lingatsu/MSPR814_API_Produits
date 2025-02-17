@@ -3,6 +3,7 @@ using ProductApi.Application.DTOs;
 using ProductApi.Application.Interface.Services;
 using ProductApi.Infrastructure.Services;
 
+
 namespace ProductApi.Presentation.Controllers;
 
 [ApiController]
@@ -57,6 +58,20 @@ public class ProductController : ControllerBase
         _rabbitMqService.SendMessage("Product deleted: " + id, "product_info_queue");
         return NoContent();
     }
+
+    [HttpPost("order")]
+    public async Task<IActionResult> OrderProducts([FromBody] List<ProductDto> productsToOrder)
+    {
+        bool result = await _productService.ProcessOrderAsync(productsToOrder);
+
+        if (!result)
+        {
+            return BadRequest("Le stock est insuffisant pour certains produits.");
+        }
+
+        return Ok("Commande traitée avec succès et message envoyé.");
+    }
+
 
     [HttpPost("consume")]
     public IActionResult Consume()

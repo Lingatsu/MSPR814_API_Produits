@@ -4,6 +4,7 @@ using ProductApi.Application.DTOs;
 using ProductApi.Application.Services;
 using ProductApi.Domain.Entities;
 using ProductApi.Domain.Interface.Repositories;
+using ProductApi.Infrastructure.Services;
 using Xunit;
 
 namespace ProductApi.Tests.Services
@@ -13,6 +14,7 @@ namespace ProductApi.Tests.Services
         private readonly Mock<IProductRepository> _productRepositoryMock;
         private readonly Mock<ICategoryRepository> _categoryRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
+        private readonly Mock<RabbitMqService> _rabbitMqServiceMock;
         private readonly ProductService _productService;
 
         public ProductServiceTests()
@@ -20,7 +22,15 @@ namespace ProductApi.Tests.Services
             _productRepositoryMock = new Mock<IProductRepository>();
             _categoryRepositoryMock = new Mock<ICategoryRepository>();
             _mapperMock = new Mock<IMapper>();
-            _productService = new ProductService(_productRepositoryMock.Object, _categoryRepositoryMock.Object, _mapperMock.Object);
+            _rabbitMqServiceMock = new Mock<RabbitMqService>(); // Mock RabbitMqService
+
+           
+            _productService = new ProductService(
+                _productRepositoryMock.Object, 
+                _categoryRepositoryMock.Object, 
+                _mapperMock.Object, 
+                _rabbitMqServiceMock.Object
+            );
         }
 
         [Fact]

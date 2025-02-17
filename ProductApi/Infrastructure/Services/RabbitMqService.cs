@@ -93,7 +93,7 @@ namespace ProductApi.Infrastructure.Services
 
         public void NotifyUser(string message)
         {
-            SendMessage(message, "user_queue");
+            SendMessage(message, "product_info_queue");
         }
     }
 }
