@@ -54,7 +54,7 @@ jobs:
   docker-build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    needs: sonar-analyze
+    # needs: sonar-analyze
     steps:
       - name: Checkout du repo
         uses: actions/checkout@v4
