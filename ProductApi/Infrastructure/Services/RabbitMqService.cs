@@ -54,46 +54,69 @@ namespace ProductApi.Infrastructure.Services
             return connection;
         }
 
-        // Méthode pour envoyer un message JSON
-        public void SendMessage<T>(T messageObject, string queueName)
+        // Création d'un exchange durable pour une meilleure distribution des messages
+        public void DeclareExchange(string exchangeName, string type = "direct")
         {
-            _channel.QueueDeclare(queue: queueName,
-                                durable: false,
-                                exclusive: false,
-                                autoDelete: false,
-                                arguments: null);
+            _channel.ExchangeDeclare(exchange: exchangeName, type: type, durable: true, autoDelete: false);
+        }
 
-            // Sérialisation JSON avec options pour ne pas échapper les caractères Unicode
+        // Méthode pour envoyer un message JSON avec persistance
+        public void SendMessage<T>(T messageObject, string exchange, string routingKey)
+        {
+            var properties = _channel.CreateBasicProperties();
+            properties.Persistent = true; // Rend le message durable
+
             var options = new JsonSerializerOptions
             {
-                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Évite l'échappement des caractères spéciaux
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
             string messageJson = JsonSerializer.Serialize(messageObject, options);
             var body = Encoding.UTF8.GetBytes(messageJson);
 
-            _channel.BasicPublish(exchange: "",
-                                routingKey: queueName,
-                                basicProperties: null,
+            _channel.BasicPublish(exchange: exchange,
+                                routingKey: routingKey,
+                                basicProperties: properties,
                                 body: body);
         }
 
-        public void ConsumeMessage(string queueName, Action<string> onMessageReceived)
+        // Consommation avec gestion des erreurs et Dead-Letter Queue
+        public void ConsumeMessage(string queueName, string exchangeName, string routingKey, Action<string> onMessageReceived)
         {
+            _channel.QueueDeclare(queue: queueName,
+                                 durable: true,
+                                 exclusive: false,
+                                 autoDelete: false,
+                                 arguments: new Dictionary<string, object>
+                                 {
+                                     { "x-dead-letter-exchange", "dlx_exchange" } // Dead-Letter Exchange
+                                 });
+
+            _channel.QueueBind(queue: queueName, exchange: exchangeName, routingKey: routingKey);
+
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                onMessageReceived(message);
+                try
+                {
+                    onMessageReceived(message);
+                    _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erreur lors du traitement du message : {ex.Message}");
+                    _channel.BasicNack(ea.DeliveryTag, multiple: false, requeue: false);
+                }
             };
             _channel.BasicConsume(queue: queueName,
-                                 autoAck: true,
+                                 autoAck: false,
                                  consumer: consumer);
         }
 
         public void NotifyUser(string message)
         {
-            SendMessage(message, "user_queue");
+            SendMessage(message, "user_exchange", "user_notification");
         }
     }
 }

@@ -49,7 +49,9 @@ public class CategoryRepository : ICategoryRepository
             throw new ArgumentException("Invalid category name");
         }
 
-        var result = await _categories.ReplaceOneAsync(c => c.Id == id, category);
+        var replaceOptions = new ReplaceOptions();
+        var result = await _categories.ReplaceOneAsync(c => c.Id == id, category, replaceOptions);
+
         return result.ModifiedCount > 0;
     }
 
