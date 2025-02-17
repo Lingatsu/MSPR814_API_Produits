@@ -9,5 +9,5 @@ public interface IProductService
     Task AddProductAsync(ProductDto productDto);
     Task<bool> UpdateProductAsync(Guid id, ProductDto productDto);
     Task<bool> DeleteProductAsync(Guid id);
-    Task<bool> ProcessOrderAsync(List<Guid> productIdsToOrder);
+    Task<bool> ProcessOrderAsync(List<OrderProductDto> productIdsToOrder);
 }

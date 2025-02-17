@@ -60,7 +60,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost("order")]
-    public async Task<IActionResult> OrderProducts([FromBody] List<Guid> productIdsToOrder)
+    public async Task<IActionResult> OrderProducts([FromBody] List<OrderProductDto> productIdsToOrder)
     {
         bool result = await _productService.ProcessOrderAsync(productIdsToOrder);
 

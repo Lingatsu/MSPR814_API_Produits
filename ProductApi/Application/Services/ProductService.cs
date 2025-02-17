@@ -35,13 +35,20 @@ public class ProductService : IProductService
         return product == null ? null : _mapper.Map<ProductDto>(product);
     }
 
-    public async Task<List<ProductDto>> GetProductsByIdsAsync(List<Guid> productIds)
+    public async Task<List<ProductDto>> GetProductsByIdsAsync(List<OrderProductDto> productIds)
     {
         // Récupérer tous les produits de la base de données
         var products = await _productRepository.GetAllAsync();
 
+        List<Guid> orderProductIds = new List<Guid>();
+
+        foreach(var product in productIds)
+        {
+            orderProductIds.Add(product.Id);
+        }
+
         // Filtrer les produits en fonction des IDs passés en paramètre
-        var filteredProducts = products.Where(p => productIds.Contains(p.Id))
+        var filteredProducts = products.Where(p => orderProductIds.Contains(p.Id))
                                         .Select(p => _mapper.Map<ProductDto>(p))
                                         .ToList();
 
@@ -76,7 +83,7 @@ public class ProductService : IProductService
         return await _productRepository.DeleteAsync(id);
     }
     
-    public async Task<bool> CheckAndUpdateStockAsync(List<ProductDto> productsToUpdate)
+    public async Task<bool> CheckAndUpdateStockAsync(List<OrderProductDto> productsToUpdate)
     {
         foreach (var productDto in productsToUpdate)
         {
@@ -86,32 +93,33 @@ public class ProductService : IProductService
                 return false; // Produit non trouvé
             }
 
-            if (product.Stock < productDto.Stock) // Vérification du stock
+            if (product.Stock < productDto.Quantity) // Vérification du stock
             {
                 return false; // Stock insuffisant
             }
 
             // Mise à jour du stock
-            product.Stock -= productDto.Stock;
+            product.Stock -= productDto.Quantity;
             await _productRepository.UpdateAsync(product.Id, product);
         }
 
         return true; // Stock mis à jour avec succès
     }
 
-    public async Task<bool> ProcessOrderAsync(List<Guid> productIdsToOrder)
+    public async Task<bool> ProcessOrderAsync(List<OrderProductDto> productIdsToOrder)
     {
         // Récupérer les produits depuis la base de données en fonction de leurs IDs
-        var productsToOrder = await GetProductsByIdsAsync(productIdsToOrder);
 
-        if (productsToOrder.Count != productIdsToOrder.Count)
-        {
-            // Si certains produits n'ont pas pu être récupérés (par exemple, ID incorrect), retourner false
-            return false;
-        }
+        // var productsToOrder = await GetProductsByIdsAsync(productIdsToOrder);
+
+        // if (productsToOrder.Count != productIdsToOrder.Count)
+        // {
+        //     // Si certains produits n'ont pas pu être récupérés (par exemple, ID incorrect), retourner false
+        //     return false;
+        // }
 
         // Vérification du stock
-        bool stockUpdated = await CheckAndUpdateStockAsync(productsToOrder);
+        bool stockUpdated = await CheckAndUpdateStockAsync(productIdsToOrder);
 
         if (!stockUpdated)
         {
@@ -119,7 +127,7 @@ public class ProductService : IProductService
         }
 
         // Envoi du message à RabbitMQ avec les produits commandés
-        _rabbitMqService.SendMessage(productsToOrder, "product_info_queue");
+        _rabbitMqService.SendMessage(productIdsToOrder, "product_info_queue");
 
         return true; // Processus réussi
     }
