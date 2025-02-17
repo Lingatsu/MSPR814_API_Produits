@@ -87,15 +87,19 @@ public class ProductService : IProductService
     {
         foreach (var productDto in productsToUpdate)
         {
+            if (productDto.Quantity <= 0)
+            {
+                throw new ArgumentException("Invalid product quantity");
+            }
             var product = await _productRepository.GetByIdAsync(productDto.Id);
             if (product == null)
             {
-                return false; // Produit non trouvé
+                throw new ArgumentException("Product does not exist");
             }
 
             if (product.Stock < productDto.Quantity) // Vérification du stock
             {
-                return false; // Stock insuffisant
+                throw new ArgumentException("Not enough stock");
             }
 
             // Mise à jour du stock
@@ -119,19 +123,25 @@ public class ProductService : IProductService
         // }
 
         // Vérification du stock
-        bool stockUpdated = await CheckAndUpdateStockAsync(productIdsToOrder);
-
-        if (!stockUpdated)
+        try
         {
-            return false; // Retourner faux si le stock est insuffisant
+            bool stockUpdated = await CheckAndUpdateStockAsync(productIdsToOrder);
+
+            if (!stockUpdated)
+            {
+                return false; // Retourner faux si le stock est insuffisant
+            }
+
+            // Envoi du message à RabbitMQ avec les produits commandés
+            _rabbitMqService.SendMessage(productIdsToOrder, "product_info_queue");
+
+            return true; // Processus réussi
         }
-
-        // Envoi du message à RabbitMQ avec les produits commandés
-        _rabbitMqService.SendMessage(productIdsToOrder, "product_info_queue");
-
-        return true; // Processus réussi
+        catch(ArgumentException ae)
+        {
+            Console.WriteLine(ae.Message);
+        }
+        return false;
     }
-
-
     
 }
