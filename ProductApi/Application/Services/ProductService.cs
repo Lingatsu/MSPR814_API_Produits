@@ -15,7 +15,7 @@ public class ProductService : IProductService
     private readonly IMapper _mapper;
     private readonly RabbitMqService _rabbitMqService;
 
-    public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper, RabbitMqService rabbitMqService)
+    public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper, RabbitMqService rabbitMqService = null)
     {
         _productRepository = productRepository;
         _categoryRepository = categoryRepository;
