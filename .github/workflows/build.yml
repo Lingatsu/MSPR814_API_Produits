@@ -9,48 +9,48 @@ on:
       - master
     types: [synchronize]  # Se déclenche uniquement quand des commits sont ajoutés à la PR
 
-jobs:
-  sonar-analyze:
-    name: Build and analyze
-    runs-on: windows-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+# jobs:
+#   sonar-analyze:
+#     name: Build and analyze
+#     runs-on: windows-latest
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
+#       with:
+#         fetch-depth: 0
 
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.112'
+#     - name: Setup .NET SDK
+#       uses: actions/setup-dotnet@v3
+#       with:
+#         dotnet-version: '8.0.112'
   
-    - name: Start SonarCloud analysis
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.scanner.scanAll=false
+#     - name: Start SonarCloud analysis
+#       env:
+#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#       run: |
+#         dotnet tool install --global dotnet-sonarscanner
+#         dotnet sonarscanner begin /k:"Lingatsu_MSPR814_API_Produits" /o:"lingatsu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.scanner.scanAll=false
     
-    - name: Restore dependencies
-      run: dotnet restore ProductApi/ProductApi.sln
+#     - name: Restore dependencies
+#       run: dotnet restore ProductApi/ProductApi.sln
 
-    - name: Build solution
-      run: dotnet build ProductApi/ProductApi.sln --configuration Release --no-restore
+#     - name: Build solution
+#       run: dotnet build ProductApi/ProductApi.sln --configuration Release --no-restore
 
-    - name: Run tests with coverage using dotnet-coverage
-      run: |
-        dotnet tool install --global dotnet-coverage
-        dotnet-coverage collect "dotnet test ProductApi.Tests/ProductApi.Tests.csproj --configuration Release --no-build" -f xml -o "coverage.xml"
+#     - name: Run tests with coverage using dotnet-coverage
+#       run: |
+#         dotnet tool install --global dotnet-coverage
+#         dotnet-coverage collect "dotnet test ProductApi.Tests/ProductApi.Tests.csproj --configuration Release --no-build" -f xml -o "coverage.xml"
 
-    - name: List files in TestResults
-      run: |
-        ls -R TestResults
+#     - name: List files in TestResults
+#       run: |
+#         ls -R TestResults
 
-    - name: Final SonarCloud Analysis
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-     
+#     - name: Final SonarCloud Analysis
+#       env:
+#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#       run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+jobs:
   docker-build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest

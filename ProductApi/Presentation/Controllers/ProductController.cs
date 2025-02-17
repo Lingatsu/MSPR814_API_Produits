@@ -72,8 +72,6 @@ public class ProductController : ControllerBase
         return Ok("Commande traitée avec succès et message envoyé.");
     }
 
-
-
     [HttpPost("consume")]
     public IActionResult Consume()
     {

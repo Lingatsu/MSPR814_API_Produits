@@ -58,7 +58,7 @@ namespace ProductApi.Infrastructure.Services
         public void SendMessage<T>(T messageObject, string queueName)
         {
             _channel.QueueDeclare(queue: queueName,
-                                durable: false,
+                                durable: true,
                                 exclusive: false,
                                 autoDelete: false,
                                 arguments: null);
