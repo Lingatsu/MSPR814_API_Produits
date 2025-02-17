@@ -60,9 +60,9 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost("order")]
-    public async Task<IActionResult> OrderProducts([FromBody] List<ProductDto> productsToOrder)
+    public async Task<IActionResult> OrderProducts([FromBody] List<Guid> productIdsToOrder)
     {
-        bool result = await _productService.ProcessOrderAsync(productsToOrder);
+        bool result = await _productService.ProcessOrderAsync(productIdsToOrder);
 
         if (!result)
         {
@@ -71,6 +71,7 @@ public class ProductController : ControllerBase
 
         return Ok("Commande traitée avec succès et message envoyé.");
     }
+
 
 
     [HttpPost("consume")]

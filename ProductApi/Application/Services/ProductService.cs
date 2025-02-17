@@ -35,6 +35,19 @@ public class ProductService : IProductService
         return product == null ? null : _mapper.Map<ProductDto>(product);
     }
 
+    public async Task<List<ProductDto>> GetProductsByIdsAsync(List<Guid> productIds)
+    {
+        // Récupérer tous les produits de la base de données
+        var products = await _productRepository.GetAllAsync();
+
+        // Filtrer les produits en fonction des IDs passés en paramètre
+        var filteredProducts = products.Where(p => productIds.Contains(p.Id))
+                                        .Select(p => _mapper.Map<ProductDto>(p))
+                                        .ToList();
+
+        return filteredProducts;
+    }
+
     public async Task AddProductAsync(ProductDto productDto)
     {
         var category = await _categoryRepository.GetByNameAsync(productDto.Category);
@@ -86,9 +99,18 @@ public class ProductService : IProductService
         return true; // Stock mis à jour avec succès
     }
 
-    public async Task<bool> ProcessOrderAsync(List<ProductDto> productsToOrder)
+    public async Task<bool> ProcessOrderAsync(List<Guid> productIdsToOrder)
     {
-        // Vérification et mise à jour du stock
+        // Récupérer les produits depuis la base de données en fonction de leurs IDs
+        var productsToOrder = await GetProductsByIdsAsync(productIdsToOrder);
+
+        if (productsToOrder.Count != productIdsToOrder.Count)
+        {
+            // Si certains produits n'ont pas pu être récupérés (par exemple, ID incorrect), retourner false
+            return false;
+        }
+
+        // Vérification du stock
         bool stockUpdated = await CheckAndUpdateStockAsync(productsToOrder);
 
         if (!stockUpdated)
@@ -101,6 +123,7 @@ public class ProductService : IProductService
 
         return true; // Processus réussi
     }
+
 
     
 }
